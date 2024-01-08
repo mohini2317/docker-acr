@@ -1,0 +1,20 @@
+# Use Alpine Linux 3.18 as the base image
+FROM alpine:3.18
+
+# Install Redis
+RUN apk add --no-cache redis
+
+# Create a non-root user with limited privileges
+RUN adduser -S -u 1001 redisuser && \
+    mkdir /data && \
+    chown -R redisuser /data && \
+    chmod -R 770 /data
+
+# Switch to the non-root user
+USER redisuser
+
+# Expose the default Redis port
+EXPOSE 6379
+
+# Start the Redis server
+CMD ["redis-server"]
